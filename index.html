@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>天气预报</title>
+    <style type="text/css">
+        /* 页面样式 */
+        body {
+            font-family: "微软雅黑", Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f5f5f5;
+        }
+        header {
+            text-align: center;
+            padding: 1.5rem 0 1rem 0;
+            background: #4a90e2;
+            color: #fff;
+        }
+        nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5rem 0;
+        }
+        .btn button {
+            font-size: 0.875rem;
+            width: 3.75rem;
+            height: 2.75rem;
+            border: 0;
+            border-radius: 3px;
+            margin: 0 0.5rem;
+            background: #fff;
+            color: #4a90e2;
+            cursor: pointer;
+            transition: width 100ms;
+        }
+        .btn button:active {
+            width: 4.5rem;
+            background: #e6f0fa;
+        }
+        section {
+            display: flex;
+            justify-content: center;
+        }
+        table {
+            width: 80%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        td {
+            border: 1px solid #e0e0e0;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            font-size: 1rem;
+        }
+        tr:first-child td {
+            background: #f0f8ff;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h4>天气预报</h4>
+    </header>
+    <nav class="btn">
+        <button onclick="load(this.value)" value="北京">北京</button>
+        <button onclick="load(this.value)" value="上海">上海</button>
+        <button onclick="load(this.value)" value="广州">广州</button>
+        <button onclick="load(this.value)" value="深圳">深圳</button>
+        <button onclick="load(this.value)" value="武汉">武汉</button>
+    </nav>
+    <section>
+        <table>
+            <tr>
+                <td>城市</td>
+                <td>最低气温</td>
+                <td>最高气温</td>
+                <td>天气</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </table>
+    </section>
+    <script>
+        function load(value) {
+            var xmlHttp;
+            if (window.XMLHttpRequest) {
+                // IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+                xmlHttp = new XMLHttpRequest();
+            }
+            xmlHttp.onreadystatechange = function () {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                    var json = JSON.parse(xmlHttp.responseText);
+                    var tds = document.getElementsByTagName("td");
+                    if(json.error){
+                        tds[4].innerHTML = tds[5].innerHTML = tds[6].innerHTML = tds[7].innerHTML = json.error;
+                    }else{
+                        tds[4].innerHTML = json.name;
+                        tds[5].innerHTML = json.min;
+                        tds[6].innerHTML = json.max;
+                        tds[7].innerHTML = json.weather;
+                    }
+                }
+            }
+            xmlHttp.open("GET", "./listWeather.php?city=" + encodeURIComponent(value), true);
+            xmlHttp.send();
+        }
+    </script>
+</body>
+</html>
